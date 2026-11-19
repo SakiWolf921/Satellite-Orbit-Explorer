@@ -73,12 +73,43 @@ def parse_gp_elements(rec):
 	}
 
 
-	def elems_table(elems): 
+def elems_table(elems):
+	header = (
+	        "Name".ljust(20) + " "
+	        + "NORAD".ljust(7) + " "
+	        + "Epoch (UTC)".ljust(27) + " "
+	        + "a [km]".rjust(10) + " "
+	        + "e".rjust(10) + " "
+	        + "i [deg]".rjust(9) + " "
+	        + "RAAN [deg]".rjust(10) + " "
+	        + "ArgP [deg]".rjust(10) + " "
+	        + "M0 [deg]".rjust(9)
+    	)
+	lines = [header, "-" * len(header)]
+
+	for e in elems:
+		line = (
+            str(e["name"]).ljust(20) + " "
+            + str(e["norad_id"]).ljust(7) + " "
+            + e["epoch"].isoformat().ljust(27) + " "
+            + str(round(e["a_km"], 2)).rjust(10) + " "
+            + str(round(e["e"], 6)).rjust(10) + " "
+            + str(round(math.degrees(e["i_rad"]), 4)).rjust(9) + " "
+            + str(round(math.degrees(e["raan_rad"]), 4)).rjust(10) + " "
+            + str(round(math.degrees(e["argp_rad"]), 4)).rjust(10) + " "
+            + str(round(math.degrees(e["M0_rad"]), 4)).rjust(9)
+        )
+		lines.append(line)
+
+	return lines
 
 		
 
 sats = read_gp_json("orbital_elements.json")
 elems = [parse_gp_elements(i) for i in sats]
+
+print("\n".join(elems_table(elems)))
+
 
 #elems.append()
 #print(elems)
